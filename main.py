@@ -1,4 +1,6 @@
+#project Algorithm Automatic sending messages
 # import library that we need in this project
+
 import os
 import pandas as pd
 import smtplib
