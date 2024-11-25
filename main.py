@@ -142,57 +142,57 @@ def browse_excel():
     entry_excel_file.insert(0, file_path)
 
 # Set up the Tkinter window
-root = tk.Tk()
-root.title("Email Automation Script")
+window = tk.Tk()
+window.title("Email Automation Script")
 
 # Create and place GUI elements
-tk.Label(root, text="Sender Email:").grid(row=0, column=0)
-entry_sender_email = tk.Entry(root, width=40)
+tk.Label(window, text="Sender Email:").grid(row=0, column=0)
+entry_sender_email = tk.Entry(window, width=40)
 entry_sender_email.grid(row=0, column=1)
 
-tk.Label(root, text="Sender Password:").grid(row=1, column=0)
-entry_sender_pass = tk.Entry(root, width=40, show="*")
+tk.Label(window, text="Sender Password:").grid(row=1, column=0)
+entry_sender_pass = tk.Entry(window, width=40, show="*")
 entry_sender_pass.grid(row=1, column=1)
 
-tk.Label(root, text="Send Date (YYYY-MM-DD):").grid(row=2, column=0)
-entry_send_date = tk.Entry(root, width=40)
+tk.Label(window, text="Send Date (YYYY-MM-DD):").grid(row=2, column=0)
+entry_send_date = tk.Entry(window, width=40)
 entry_send_date.grid(row=2, column=1)
 
-tk.Label(root, text="Send Time (HH:MM):").grid(row=3, column=0)
-entry_send_time = tk.Entry(root, width=40)
+tk.Label(window, text="Send Time (HH:MM):").grid(row=3, column=0)
+entry_send_time = tk.Entry(window, width=40)
 entry_send_time.grid(row=3, column=1)
 
-tk.Label(root, text="Mode (one/many):").grid(row=4, column=0)
+tk.Label(window, text="Mode (one/many):").grid(row=4, column=0)
 var_mode = tk.StringVar(value="one")
-tk.Radiobutton(root, text="One", variable=var_mode, value="one").grid(row=4, column=1)
-tk.Radiobutton(root, text="Many", variable=var_mode, value="many").grid(row=4, column=2)
+tk.Radiobutton(window, text="One", variable=var_mode, value="one").grid(row=4, column=1)
+tk.Radiobutton(window, text="Many", variable=var_mode, value="many").grid(row=4, column=2)
 
 # Input fields for single email
-tk.Label(root, text="Receiver Email:").grid(row=5, column=0)
-entry_receiver_email = tk.Entry(root, width=40)
+tk.Label(window, text="Receiver Email:").grid(row=5, column=0)
+entry_receiver_email = tk.Entry(window, width=40)
 entry_receiver_email.grid(row=5, column=1)
 
-tk.Label(root, text="Receiver Name:").grid(row=6, column=0)
-entry_receiver_name = tk.Entry(root, width=40)
+tk.Label(window, text="Receiver Name:").grid(row=6, column=0)
+entry_receiver_name = tk.Entry(window, width=40)
 entry_receiver_name.grid(row=6, column=1)
 
-tk.Label(root, text="Subject:").grid(row=7, column=0)
-entry_subject = tk.Entry(root, width=40)
+tk.Label(window, text="Subject:").grid(row=7, column=0)
+entry_subject = tk.Entry(window, width=40)
 entry_subject.grid(row=7, column=1)
 
-tk.Label(root, text="Attachment Path:").grid(row=8, column=0)
-entry_attachment_path = tk.Entry(root, width=40)
+tk.Label(window, text="Attachment Path:").grid(row=8, column=0)
+entry_attachment_path = tk.Entry(window, width=40)
 entry_attachment_path.grid(row=8, column=1)
-tk.Button(root, text="Browse", command=browse_attachment).grid(row=8, column=2)
+tk.Button(window, text="Browse", command=browse_attachment).grid(row=8, column=2)
 
 # Input fields for bulk email
-tk.Label(root, text="Excel File (for many):").grid(row=9, column=0)
-entry_excel_file = tk.Entry(root, width=40)
+tk.Label(window, text="Excel File (for many):").grid(row=9, column=0)
+entry_excel_file = tk.Entry(window, width=40)
 entry_excel_file.grid(row=9, column=1)
-tk.Button(root, text="Browse", command=browse_excel).grid(row=9, column=2)
+tk.Button(window, text="Browse", command=browse_excel).grid(row=9, column=2)
 
 # Send email button
-tk.Button(root, text="Send Emails", command=gui_send_emails).grid(row=10, column=0, columnspan=3)
+tk.Button(window, text="Send Emails", command=gui_send_emails).grid(row=10, column=0, columnspan=3)
 
 # Start the Tkinter event loop
-root.mainloop()
+window.mainloop()
