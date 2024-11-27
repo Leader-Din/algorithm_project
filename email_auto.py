@@ -152,6 +152,8 @@ def gui_send_emails():
     else:
         messagebox.showerror("Error", "Invalid mode selected. Please choose 'one' or 'many'.")
 
+
+
 import tkinter as tk
 from tkinter import filedialog, messagebox
 
@@ -212,11 +214,10 @@ def gui_send_emails():
     else:
         messagebox.showerror("Error", "Invalid mode selected. Please choose 'one' or 'many'.")
 
-
 # Set up the Tkinter window
 window = tk.Tk()
 window.title("Email Automation Script")
-window.geometry("650x500")
+window.geometry("700x550")
 window.resizable(False, False)
 icon_path = "img.png"  # Replace with your icon path
 if os.path.exists(icon_path):
@@ -228,10 +229,10 @@ window.configure(bg='blue')
 
 # Frame with red border
 frame = tk.Frame(window, bg='#f4f4f4', highlightbackground="red", highlightthickness=2)
-frame.place(relx=0.5, rely=0.5, anchor="center", width=600, height=470)
+frame.place(relx=0.5, rely=0.5, anchor="center", width=650, height=500)
 
 # Add the title inside the frame and align it
-title_label = tk.Label(frame, text="Email Sender", bg='#f4f4f4', font=("Arial", 16, "bold"))
+title_label = tk.Label(frame, text="Email Automation Tool", bg='#f4f4f4', font=("Arial", 18, "bold"), fg="blue")
 title_label.grid(row=0, columnspan=3, pady=20)  # Title at the top, centered across all columns
 
 # Create and place GUI elements inside the frame
@@ -251,16 +252,16 @@ tk.Label(frame, text="Send Time (HH:MM):", bg='#f4f4f4', font=("Arial", 10)).gri
 entry_send_time = tk.Entry(frame, width=40, font=("Arial", 10))
 entry_send_time.grid(row=4, column=1, padx=10, pady=5)
 
-tk.Label(frame, text="Mode (one/many):", bg='#f4f4f4', font=("Arial", 10)).grid(row=5, column=0, padx=10, pady=5, sticky="e")
+tk.Label(frame, text="Mode (Send to One/Excel):", bg='#f4f4f4', font=("Arial", 10)).grid(row=5, column=0, padx=10, pady=5, sticky="e")
 var_mode = tk.StringVar(value="one")
-tk.Radiobutton(frame, text="One", variable=var_mode, value="one", bg='#f4f4f4', font=("Arial", 10)).grid(row=5, column=1, padx=10, pady=5, sticky="w")
-tk.Radiobutton(frame, text="Many", variable=var_mode, value="many", bg='#f4f4f4', font=("Arial", 10)).grid(row=5, column=1, padx=10, pady=5, sticky="e")
+tk.Radiobutton(frame, text="One Person", variable=var_mode, value="one", bg='#f4f4f4', font=("Arial", 10)).grid(row=5, column=1, padx=10, pady=5, sticky="w")
+tk.Radiobutton(frame, text="Many (Excel File)", variable=var_mode, value="many", bg='#f4f4f4', font=("Arial", 10)).grid(row=5, column=1, padx=10, pady=5, sticky="e")
 
-tk.Label(frame, text="Receiver Email:", bg='#f4f4f4', font=("Arial", 10)).grid(row=6, column=0, padx=10, pady=5, sticky="e")
+tk.Label(frame, text="Receiver Email (For One):", bg='#f4f4f4', font=("Arial", 10)).grid(row=6, column=0, padx=10, pady=5, sticky="e")
 entry_receiver_email = tk.Entry(frame, width=40, font=("Arial", 10))
 entry_receiver_email.grid(row=6, column=1, padx=10, pady=5)
 
-tk.Label(frame, text="Receiver Name:", bg='#f4f4f4', font=("Arial", 10)).grid(row=7, column=0, padx=10, pady=5, sticky="e")
+tk.Label(frame, text="Receiver Name (Optional):", bg='#f4f4f4', font=("Arial", 10)).grid(row=7, column=0, padx=10, pady=5, sticky="e")
 entry_receiver_name = tk.Entry(frame, width=40, font=("Arial", 10))
 entry_receiver_name.grid(row=7, column=1, padx=10, pady=5)
 
@@ -273,13 +274,14 @@ entry_attachment_path = tk.Entry(frame, width=40, font=("Arial", 10))
 entry_attachment_path.grid(row=9, column=1, padx=10, pady=5)
 tk.Button(frame, width=8, text="Browse", command=browse_attachment, font=("Arial", 10), bg="teal", fg="white", border=0).grid(row=9, column=2, padx=10, pady=5)
 
-tk.Label(frame, text="Excel File:", bg='#f4f4f4', font=("Arial", 10)).grid(row=10, column=0, padx=10, pady=5, sticky="e")
+tk.Label(frame, text="Excel File (For Many):", bg='#f4f4f4', font=("Arial", 10)).grid(row=10, column=0, padx=10, pady=5, sticky="e")
 entry_excel_file = tk.Entry(frame, width=40, font=("Arial", 10))
 entry_excel_file.grid(row=10, column=1, padx=10, pady=5)
 tk.Button(frame, width=8, text="Browse", command=browse_excel, font=("Arial", 10), bg="teal", fg="white", border=0).grid(row=10, column=2, padx=10, pady=5)
 
+# Action Buttons
 tk.Button(frame, text="Send Emails", width=10, command=gui_send_emails, bg="blue", fg="#fff", border=0).grid(row=11, column=2, padx=10, pady=20)
-tk.Button(frame, width=10, text="Exit",  command=window.quit, bg="red", fg="#fff", border=0).grid(row=11, column=1, padx=10, pady=20, sticky="e")
+tk.Button(frame, width=10, text="Exit", command=window.quit, bg="red", fg="#fff", border=0).grid(row=11, column=1, padx=10, pady=20, sticky="e")
 
 # Start the GUI loop
 window.mainloop()
