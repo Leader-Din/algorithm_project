@@ -1,5 +1,3 @@
-#project Algorithm Automatic sending messages
-# import library that we need in this project
 
 import os
 import pandas as pd
@@ -111,6 +109,14 @@ def gui_send_emails():
     send_time = entry_send_time.get()
     send_datetime_input = f"{send_date} {send_time}"
 
+    # Display user input for scheduling in terminal
+    print(f"Scheduled send datetime: {send_datetime_input}")
+    print(f"Sender Email: {sender_email}")
+    print(f"Sender Password: {sender_pass}")
+    print(f"Send Date: {send_date}")
+    print(f"Send Time: {send_time}")
+    print(f"Mode: {var_mode.get()}")  # Displaying the mode (one or many)
+
     schedule_email(send_datetime_input)  # Schedule email sending
     mode = var_mode.get()  # Get mode (one or many)
 
@@ -120,11 +126,20 @@ def gui_send_emails():
         subject = entry_subject.get()
         attachment_path = entry_attachment_path.get()
 
+        # Display user input for single email in terminal
+        print(f"Sending single email to {receiver_email}")
+        print(f"Subject: {subject}")
+        print(f"Attachment path: {attachment_path}")
+
         send_email(sender_email, sender_pass, receiver_email, name, subject, attachment_path)
         messagebox.showinfo("Success", "Email sent successfully!")
 
     elif mode == "many":
         excel_file = entry_excel_file.get()
+
+        # Display user input for bulk email in terminal
+        print(f"Sending bulk emails using Excel file: {excel_file}")
+
         send_bulk_emails(sender_email, sender_pass, excel_file)
         messagebox.showinfo("Success", "Bulk emails sent successfully!")
 
@@ -147,54 +162,58 @@ def browse_excel():
 window = tk.Tk()
 window.title("Email Automation Script")
 
-# Create and place GUI elements
-tk.Label(window, text="Sender Email:").grid(row=0, column=0)
-entry_sender_email = tk.Entry(window, width=40)
-entry_sender_email.grid(row=0, column=1)
+# Customize the window background color
+window.configure(bg='#f4f4f4')
 
-tk.Label(window, text="Sender Password:").grid(row=1, column=0)
-entry_sender_pass = tk.Entry(window, width=40, show="*")
-entry_sender_pass.grid(row=1, column=1)
+# Create and place GUI elements with styling
+tk.Label(window, text="Sender Email:", bg='#f4f4f4', font=("Arial", 10)).grid(row=0, column=0, padx=10, pady=5, sticky="e")
+entry_sender_email = tk.Entry(window, width=40, font=("Arial", 10))
+entry_sender_email.grid(row=0, column=1, padx=10, pady=5)
 
-tk.Label(window, text="Send Date (YYYY-MM-DD):").grid(row=2, column=0)
-entry_send_date = tk.Entry(window, width=40)
-entry_send_date.grid(row=2, column=1)
+tk.Label(window, text="Sender Password:", bg='#f4f4f4', font=("Arial", 10)).grid(row=1, column=0, padx=10, pady=5, sticky="e")
+entry_sender_pass = tk.Entry(window, width=40, show="*", font=("Arial", 10))
+entry_sender_pass.grid(row=1, column=1, padx=10, pady=5)
 
-tk.Label(window, text="Send Time (HH:MM):").grid(row=3, column=0)
-entry_send_time = tk.Entry(window, width=40)
-entry_send_time.grid(row=3, column=1)
+tk.Label(window, text="Send Date (YYYY-MM-DD):", bg='#f4f4f4', font=("Arial", 10)).grid(row=2, column=0, padx=10, pady=5, sticky="e")
+entry_send_date = tk.Entry(window, width=40, font=("Arial", 10))
+entry_send_date.grid(row=2, column=1, padx=10, pady=5)
 
-tk.Label(window, text="Mode (one/many):").grid(row=4, column=0)
+tk.Label(window, text="Send Time (HH:MM):", bg='#f4f4f4', font=("Arial", 10)).grid(row=3, column=0, padx=10, pady=5, sticky="e")
+entry_send_time = tk.Entry(window, width=40, font=("Arial", 10))
+entry_send_time.grid(row=3, column=1, padx=10, pady=5)
+
+tk.Label(window, text="Mode (one/many):", bg='#f4f4f4', font=("Arial", 10)).grid(row=4, column=0, padx=10, pady=5, sticky="e")
 var_mode = tk.StringVar(value="one")
-tk.Radiobutton(window, text="One", variable=var_mode, value="one").grid(row=4, column=1)
-tk.Radiobutton(window, text="Many", variable=var_mode, value="many").grid(row=4, column=2)
+tk.Radiobutton(window, text="One", variable=var_mode, value="one", font=("Arial", 10), bg='#f4f4f4').grid(row=4, column=1)
+tk.Radiobutton(window, text="Many", variable=var_mode, value="many", font=("Arial", 10), bg='#f4f4f4').grid(row=4, column=2)
 
 # Input fields for single email
-tk.Label(window, text="Receiver Email:").grid(row=5, column=0)
-entry_receiver_email = tk.Entry(window, width=40)
-entry_receiver_email.grid(row=5, column=1)
+tk.Label(window, text="Receiver Email:", bg='#f4f4f4', font=("Arial", 10)).grid(row=5, column=0, padx=10, pady=5, sticky="e")
+entry_receiver_email = tk.Entry(window, width=40, font=("Arial", 10))
+entry_receiver_email.grid(row=5, column=1, padx=10, pady=5)
 
-tk.Label(window, text="Receiver Name:").grid(row=6, column=0)
-entry_receiver_name = tk.Entry(window, width=40)
-entry_receiver_name.grid(row=6, column=1)
+tk.Label(window, text="Receiver Name:", bg='#f4f4f4', font=("Arial", 10)).grid(row=6, column=0, padx=10, pady=5, sticky="e")
+entry_receiver_name = tk.Entry(window, width=40, font=("Arial", 10))
+entry_receiver_name.grid(row=6, column=1, padx=10, pady=5)
 
-tk.Label(window, text="Subject:").grid(row=7, column=0)
-entry_subject = tk.Entry(window, width=40)
-entry_subject.grid(row=7, column=1)
+tk.Label(window, text="Subject:", bg='#f4f4f4', font=("Arial", 10)).grid(row=7, column=0, padx=10, pady=5, sticky="e")
+entry_subject = tk.Entry(window, width=40, font=("Arial", 10))
+entry_subject.grid(row=7, column=1, padx=10, pady=5)
 
-tk.Label(window, text="Attachment Path:").grid(row=8, column=0)
-entry_attachment_path = tk.Entry(window, width=40)
-entry_attachment_path.grid(row=8, column=1)
-tk.Button(window, text="Browse", command=browse_attachment).grid(row=8, column=2)
+tk.Label(window, text="Attachment Path:", bg='#f4f4f4', font=("Arial", 10)).grid(row=8, column=0, padx=10, pady=5, sticky="e")
+entry_attachment_path = tk.Entry(window, width=40, font=("Arial", 10))
+entry_attachment_path.grid(row=8, column=1, padx=10, pady=5)
 
-# Input fields for bulk email
-tk.Label(window, text="Excel File (for many):").grid(row=9, column=0)
-entry_excel_file = tk.Entry(window, width=40)
-entry_excel_file.grid(row=9, column=1)
-tk.Button(window, text="Browse", command=browse_excel).grid(row=9, column=2)
+tk.Button(window, text="Browse", command=browse_attachment, font=("Arial", 10), bg="#80c0e1").grid(row=8, column=2, padx=10, pady=5)
 
-# Send email button
-tk.Button(window, text="Send Emails", command=gui_send_emails).grid(row=10, column=0, columnspan=3)
+# Input field for bulk emails
+tk.Label(window, text="Excel File:", bg='#f4f4f4', font=("Arial", 10)).grid(row=9, column=0, padx=10, pady=5, sticky="e")
+entry_excel_file = tk.Entry(window, width=40, font=("Arial", 10))
+entry_excel_file.grid(row=9, column=1, padx=10, pady=5)
 
-# Start the Tkinter event loop
+tk.Button(window, text="Browse", command=browse_excel, font=("Arial", 10), bg="#80c0e1").grid(row=9, column=2, padx=10, pady=5)
+
+# Send button
+tk.Button(window, text="Send Emails", command=gui_send_emails, font=("Arial", 10), bg="#80c0e1").grid(row=10, column=1, pady=10)
+
 window.mainloop()
