@@ -152,8 +152,6 @@ def gui_send_emails():
     else:
         messagebox.showerror("Error", "Invalid mode selected. Please choose 'one' or 'many'.")
 
-
-
 import tkinter as tk
 from tkinter import filedialog, messagebox
 
@@ -171,53 +169,94 @@ def browse_excel():
 
 # Function to handle GUI inputs and execute the main email function
 def gui_send_emails():
-    sender_email = entry_sender_email.get()
-    sender_pass = entry_sender_pass.get()
-    send_date = entry_send_date.get()
-    send_time = entry_send_time.get()
-    send_datetime_input = f"{send_date} {send_time}"
+    # Get user input from the GUI fields
+    sender_email = entry_sender_email.get().strip()
+    sender_pass = entry_sender_pass.get().strip()
+    send_date = entry_send_date.get().strip()
+    send_time = entry_send_time.get().strip()
+    mode = var_mode.get()
 
-    # Display user input for scheduling in terminal
-    print("Scheduled send datetime: ", send_datetime_input)
-    print("Sender Email: ", sender_email)
-    print("Sender Password: ", sender_pass)
-    print("Send Date: ", send_date)
-    print("Send Time: ", send_time)
-    print("Mode: ",var_mode.get())  # Displaying the mode (one or many)
-
-    schedule_email(send_datetime_input)  # Schedule email sending
-    mode = var_mode.get()  # Get mode (one or many)
+    # Display user input in the terminal at the start
+    print("\n----- User Input -----")
+    print("Sender Email:", sender_email)
+    print("Sender Password:", "*" * len(sender_pass))  # Hide password for security
+    print("Send Date:", send_date)
+    print("Send Time:", send_time)
+    print("Mode:", mode)
 
     if mode == "one":
-        receiver_email = entry_receiver_email.get()
-        name = entry_receiver_name.get()
-        subject = entry_subject.get()
-        attachment_path = entry_attachment_path.get()
+        receiver_email = entry_receiver_email.get().strip()
+        name = entry_receiver_name.get().strip()
+        subject = entry_subject.get().strip()
+        attachment_path = entry_attachment_path.get().strip()
 
-        # Display user input for single email in terminal
-        print("Sending single email to", receiver_email)
+        print("Receiver Email:", receiver_email)
+        print("Receiver Name:", name)
         print("Subject:", subject)
-        print("Attachment path:", attachment_path)
+        print("Attachment Path:", attachment_path)
+    elif mode == "many":
+        excel_file = entry_excel_file.get().strip()
+        print("Excel File Path:", excel_file)
+    print("----------------------\n")
 
+    # Validate required fields
+    if not sender_email or not sender_pass:
+        messagebox.showerror("Error", "Sender email and password are required.")
+        return
+    if not send_date or not send_time:
+        messagebox.showerror("Error", "Send date and time are required.")
+        return
+    if mode not in {"one", "many"}:
+        messagebox.showerror("Error", "Please select a valid mode (one/many).")
+        return
+
+    # Validate datetime format
+    if len(send_date) != 10 or len(send_time) not in {5, 8}:
+        messagebox.showerror("Error", "Send date must be in YYYY-MM-DD and time in HH:MM or HH:MM:SS format.")
+        return
+
+    # Validate and parse datetime
+    send_datetime_input = f"{send_date} {send_time}"
+    if len(send_time) == 8:
+        send_datetime = datetime.strptime(send_datetime_input, "%Y-%m-%d %H:%M:%S")
+    else:
+        send_datetime = datetime.strptime(send_datetime_input, "%Y-%m-%d %H:%M")
+
+    # Schedule email sending
+    while datetime.now() < send_datetime:
+        time.sleep(1)
+
+    if mode == "one":
+        # Validate fields for single email mode
+        if not receiver_email or not name or not subject:
+            messagebox.showerror("Error", "Receiver email, name, and subject are required for single email mode.")
+            return
+        if not attachment_path or not os.path.exists(attachment_path):
+            messagebox.showerror("Error", "Valid attachment file is required.")
+            return
+
+        # Read the attachment file
+        file_data = open(attachment_path, 'rb').read()
+
+        # Send single email
         send_email(sender_email, sender_pass, receiver_email, name, subject, attachment_path)
+
         messagebox.showinfo("Success", "Email sent successfully!")
 
     elif mode == "many":
-        excel_file = entry_excel_file.get()
+        # Validate bulk email mode
+        if not excel_file or not os.path.exists(excel_file):
+            messagebox.showerror("Error", "Valid Excel file is required for bulk email mode.")
+            return
 
-        # Display user input for bulk email in terminal
-        print("Sending bulk emails using Excel file: ", excel_file)
-
+        # Send bulk emails
         send_bulk_emails(sender_email, sender_pass, excel_file)
-        messagebox.showinfo("Success", " Emails sent successfully!")
-
-    else:
-        messagebox.showerror("Error", "Invalid mode selected. Please choose 'one' or 'many'.")
+        messagebox.showinfo("Success", "Bulk emails sent successfully!")
 
 # Set up the Tkinter window
 window = tk.Tk()
 window.title("Email Automation Script")
-window.geometry("700x550")
+window.geometry("650x500")
 window.resizable(False, False)
 icon_path = "img.png"  # Replace with your icon path
 if os.path.exists(icon_path):
@@ -229,10 +268,10 @@ window.configure(bg='blue')
 
 # Frame with red border
 frame = tk.Frame(window, bg='#f4f4f4', highlightbackground="red", highlightthickness=2)
-frame.place(relx=0.5, rely=0.5, anchor="center", width=650, height=500)
+frame.place(relx=0.5, rely=0.5, anchor="center", width=600, height=470)
 
 # Add the title inside the frame and align it
-title_label = tk.Label(frame, text="Email Automation Tool", bg='#f4f4f4', font=("Arial", 18, "bold"), fg="blue")
+title_label = tk.Label(frame, text="Email Sender", bg='#f4f4f4', font=("Arial", 16, "bold"))
 title_label.grid(row=0, columnspan=3, pady=20)  # Title at the top, centered across all columns
 
 # Create and place GUI elements inside the frame
@@ -252,16 +291,16 @@ tk.Label(frame, text="Send Time (HH:MM):", bg='#f4f4f4', font=("Arial", 10)).gri
 entry_send_time = tk.Entry(frame, width=40, font=("Arial", 10))
 entry_send_time.grid(row=4, column=1, padx=10, pady=5)
 
-tk.Label(frame, text="Mode (Send to One/Excel):", bg='#f4f4f4', font=("Arial", 10)).grid(row=5, column=0, padx=10, pady=5, sticky="e")
+tk.Label(frame, text="Mode (one/many):", bg='#f4f4f4', font=("Arial", 10)).grid(row=5, column=0, padx=10, pady=5, sticky="e")
 var_mode = tk.StringVar(value="one")
-tk.Radiobutton(frame, text="One Person", variable=var_mode, value="one", bg='#f4f4f4', font=("Arial", 10)).grid(row=5, column=1, padx=10, pady=5, sticky="w")
-tk.Radiobutton(frame, text="Many (Excel File)", variable=var_mode, value="many", bg='#f4f4f4', font=("Arial", 10)).grid(row=5, column=1, padx=10, pady=5, sticky="e")
+tk.Radiobutton(frame, text="One", variable=var_mode, value="one", bg='#f4f4f4', font=("Arial", 10)).grid(row=5, column=1, padx=10, pady=5, sticky="w")
+tk.Radiobutton(frame, text="Many", variable=var_mode, value="many", bg='#f4f4f4', font=("Arial", 10)).grid(row=5, column=1, padx=10, pady=5, sticky="e")
 
-tk.Label(frame, text="Receiver Email (For One):", bg='#f4f4f4', font=("Arial", 10)).grid(row=6, column=0, padx=10, pady=5, sticky="e")
+tk.Label(frame, text="Receiver Email:", bg='#f4f4f4', font=("Arial", 10)).grid(row=6, column=0, padx=10, pady=5, sticky="e")
 entry_receiver_email = tk.Entry(frame, width=40, font=("Arial", 10))
 entry_receiver_email.grid(row=6, column=1, padx=10, pady=5)
 
-tk.Label(frame, text="Receiver Name (Optional):", bg='#f4f4f4', font=("Arial", 10)).grid(row=7, column=0, padx=10, pady=5, sticky="e")
+tk.Label(frame, text="Receiver Name:", bg='#f4f4f4', font=("Arial", 10)).grid(row=7, column=0, padx=10, pady=5, sticky="e")
 entry_receiver_name = tk.Entry(frame, width=40, font=("Arial", 10))
 entry_receiver_name.grid(row=7, column=1, padx=10, pady=5)
 
@@ -274,14 +313,13 @@ entry_attachment_path = tk.Entry(frame, width=40, font=("Arial", 10))
 entry_attachment_path.grid(row=9, column=1, padx=10, pady=5)
 tk.Button(frame, width=8, text="Browse", command=browse_attachment, font=("Arial", 10), bg="teal", fg="white", border=0).grid(row=9, column=2, padx=10, pady=5)
 
-tk.Label(frame, text="Excel File (For Many):", bg='#f4f4f4', font=("Arial", 10)).grid(row=10, column=0, padx=10, pady=5, sticky="e")
+tk.Label(frame, text="Excel File:", bg='#f4f4f4', font=("Arial", 10)).grid(row=10, column=0, padx=10, pady=5, sticky="e")
 entry_excel_file = tk.Entry(frame, width=40, font=("Arial", 10))
 entry_excel_file.grid(row=10, column=1, padx=10, pady=5)
 tk.Button(frame, width=8, text="Browse", command=browse_excel, font=("Arial", 10), bg="teal", fg="white", border=0).grid(row=10, column=2, padx=10, pady=5)
 
-# Action Buttons
 tk.Button(frame, text="Send Emails", width=10, command=gui_send_emails, bg="blue", fg="#fff", border=0).grid(row=11, column=2, padx=10, pady=20)
-tk.Button(frame, width=10, text="Exit", command=window.quit, bg="red", fg="#fff", border=0).grid(row=11, column=1, padx=10, pady=20, sticky="e")
+tk.Button(frame, width=10, text="Exit",  command=window.quit, bg="red", fg="#fff", border=0).grid(row=11, column=1, padx=10, pady=20, sticky="e")
 
 # Start the GUI loop
 window.mainloop()
